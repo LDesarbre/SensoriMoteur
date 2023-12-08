@@ -1,0 +1,9 @@
+import random
+
+list=['droite','droite','droite','gauche','gauche','gauche']
+print("lancers proches")
+print(random.sample(list,6))
+
+list=['droite','droite','droite','gauche','gauche','gauche']
+print("lancers loin")
+print(random.sample(list,6))
