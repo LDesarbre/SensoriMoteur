@@ -1,9 +1,9 @@
-!pip install --upgrade matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.signal import argrelextrema
 
+#FONCTIONS
 def splitmatrix(filename):
-    #filename = "groupe3_002_2023_11_23_Marker.txt"
     with open(filename, 'r') as file:
         data = file.read()
 
@@ -28,71 +28,38 @@ def splitmatrix(filename):
     mbresinf= l[9::]   
     return (l, mbressup,mbresinf)
 
-l=splitmatrix("groupe3_003_2023_11_23_Marker.txt")[0]
 
-M5=l[3]
-x5=M5[0]
-y5=M5[1]
-z5=M5[2]
-plt.plot(x5, label = 'Marqueur 5, poignée gauche ')
+#TEMPS
+def extract_local_maxima_time_differences(x1, x2, thresholdchoice=1000): #x2-x1
+    def extract_local_maxima(x, threshold):
+        from scipy.signal import find_peaks
 
-M14= l[11]
-x14 = M14[0]
-Y14 = M14[1]
-Z14 = M14[2]
-plt.plot(x14, label = 'Marqueur 14, genoux gauche')
+        peaks, _ = find_peaks(x, height=thresholdchoice)
+        return peaks
 
-plt.axhspan(620, 1100, color='yellow', alpha=0.3, label='mouvement à droite ')
-plt.axhspan(0, 619 , color='green', alpha=0.3, label='mouvement à gauche')
-# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
+    peaks_M1_indices = extract_local_maxima(x1, threshold=thresholdchoice)
+    peaks_M2_indices = extract_local_maxima(x2, threshold=thresholdchoice)
 
-plt.title ('Pour lancer court, côté gauche')
-plt.legend()
-plt.show()
+    # Trouver tous les pics, y compris ceux qui ne sont pas communs
+    all_peaks_indices = np.union1d(peaks_M1_indices, peaks_M2_indices)
 
-l=splitmatrix("groupe3_003_2023_11_23_Marker.txt")[0]
+    # Extraire les valeurs des pics à partir des indices
+    peaks_M1 = x1[all_peaks_indices]
+    peaks_M2 = x2[all_peaks_indices]
 
-M7=l[5]
-x7=M7[0]
-y7=M7[1]
-z7=M7[2]
-plt.plot(x7, label = 'Marqueur 7, poignée droit')
+    # Calculer la différence de temps entre chaque paire de pics
+    #time_differences =peaks_M2_indices-peaks_M1_indices
 
-M18= l[13]
-x18 = M18[0]
-Y18 = M18[1]
-Z18 = M18[2]
-plt.plot(x18, label = 'Marqueur 18, genoux droit')
+    # Calculer la moyenne de la différence de temps
+    #average_time_difference = np.mean(time_differences)
+    
+    # Calculer la différence entre chaque paire d'extréma
+    differences_between_peaks = peaks_M2 - peaks_M1
+    average_difference_between_peaks = np.mean(differences_between_peaks)
+    
+    return all_peaks_indices, peaks_M1, peaks_M2, average_difference_between_peaks 
 
-plt.axhspan(320, 1100, color='yellow', alpha=0.3, label='mouvement à droite ')
-plt.axhspan(0, 319 , color='green', alpha=0.3, label='mouvement à gauche')
-# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
 
-plt.title ('Pour lancer court, côté droit')
-plt.legend()
-plt.show()
-
-l=splitmatrix("groupe3_004_2023_11_23_Marker.txt")[0]
-
-M5=l[3]
-x5=M5[0]
-y5=M5[1]
-z5=M5[2]
-plt.plot(x5, label = 'Marqueur 5, poignée gauche ')
-
-M14= l[11]
-x14 = M14[0]
-Y14 = M14[1]
-Z14 = M14[2]
-plt.plot(x14, label = 'Marqueur 14, genoux gauche')
-
-plt.axhspan(620, 1600, color='yellow', alpha=0.3, label='mouvement à droite ')
-plt.axhspan(-1600, 619 , color='green', alpha=0.3, label='mouvement à gauche')
-# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
-
-plt.title ('Pour lancer long, côté gauche')
-plt.legend()
-plt.show()
 
 l=splitmatrix("groupe3_004_2023_11_23_Marker.txt")[0]
 
@@ -100,18 +67,82 @@ M7=l[5]
 x7=M7[0]
 y7=M7[1]
 z7=M7[2]
-plt.plot(x7, label = 'Marqueur 7, poignée droit')
 
 M18= l[13]
 x18 = M18[0]
 Y18 = M18[1]
 Z18 = M18[2]
-plt.plot(x18, label = 'Marqueur 18, genoux droit')
 
-plt.axhspan(320, 1600, color='yellow', alpha=0.3, label='mouvement à droite ')
-plt.axhspan(-1500, 319 , color='green', alpha=0.3, label='mouvement à gauche')
-# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
+all_peaks_indices, peaks_M7, peaks_M18, average_differencepeaksM7M18 =extract_local_maxima_time_differences(x7, x18, 500)
 
-plt.title ('Pour lancer long, côté droit')
+all_minima_indices=extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320)[0]
+minima_M7= -extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320)[1]
+minima_M18 = -extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320)[2]
+average_difference_between_minimaM7M18=-extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320)[3]
+
+
+print ("Moyenne des différences entre les minimum :", average_difference_between_minimaM7M18)
+print ("Moyenne des différences entre les extréma :",average_differencepeaksM7M18)
+
+plt.axhspan(320, 1600, color='yellow', alpha=0.3) #, label='mouvement à droite '
+plt.axhspan(-1500, 319 , color='green', alpha=0.3) #, label='mouvement à gauche'
+# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa
+
+plt.plot(x7, label = 'Marqueur 7, poignée droit', color='blue')
+plt.plot(x18, label = 'Marqueur 18, genoux droit', color='orange')
+plt.scatter(all_peaks_indices, peaks_M18, color='orange')#, label='Pics M18, à droite'
+plt.scatter(all_peaks_indices, peaks_M7, color='blue') #, label='Pics M7, à droite'
+plt.scatter(all_minima_indices, minima_M18, color='orange', marker ="v") #label='Pics M18, à gauche',
+plt.scatter(all_minima_indices, minima_M7, color='blue', marker ="v") #label='Pics M7, à gauche'
+plt.axhline(y=-320, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à gauche')
+plt.axhline(y=1000, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à droite')
+
+
+plt.title ('Lancer long, marqueur côté droit')
+plt.xlabel('Temps')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+
+
+
+
+
+l=splitmatrix("groupe3_003_2023_11_23_Marker.txt")[0]
+
+M7=l[5]
+x7=M7[0]
+M18= l[13]
+x18 = M18[0]
+
+
+all_peaks_indices, peaks_M7, peaks_M18, average_differencepeaksM7M18 =extract_local_maxima_time_differences(x7, x18, 500)
+
+all_minima_indices=extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=-200)[0]
+minima_M7= -extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=-200)[1]
+minima_M18 = -extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=-200)[2]
+average_difference_between_minimaM7M18 =-extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=-200)[3]
+
+
+print ("Moyenne des différences entre les minimum :", average_difference_between_minimaM7M18)
+print ("Moyenne des différences entre les extréma :",average_differencepeaksM7M18)
+
+plt.axhspan(320, 1000, color='yellow', alpha=0.3) #, label='mouvement à droite '
+plt.axhspan(-500, 319 , color='green', alpha=0.3) #, label='mouvement à gauche'
+# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa
+
+plt.plot(x7, label = 'Marqueur 7, poignée droit', color='blue')
+plt.plot(x18, label = 'Marqueur 18, genoux droit', color='orange')
+plt.scatter(all_peaks_indices, peaks_M18, color='orange')#, label='Pics M18, à droite'
+plt.scatter(all_peaks_indices, peaks_M7, color='blue') #, label='Pics M7, à droite'
+plt.scatter(all_minima_indices, minima_M18, color='orange', marker ="v") #label='Pics M18, à gauche',
+plt.scatter(all_minima_indices, minima_M7, color='blue', marker ="v") #label='Pics M7, à gauche'
+plt.axhline(y=200, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à gauche')
+plt.axhline(y=500, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à droite')
+
+
+plt.title ('Lancer long, marqueur côté droit')
+plt.xlabel('Temps')
+plt.ylabel('x')
 plt.legend()
 plt.show()
