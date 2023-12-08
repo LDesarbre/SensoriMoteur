@@ -1,0 +1,117 @@
+!pip install --upgrade matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+
+def splitmatrix(filename):
+    #filename = "groupe3_002_2023_11_23_Marker.txt"
+    with open(filename, 'r') as file:
+        data = file.read()
+
+    # Séparation des valeurs en lignes et colonnes
+    lines = data.strip().split('\n')
+    matrix = [list(map(float, line.split())) for line in lines]
+
+    # Convertir en matrice numpy
+    matrix_np = np.array(matrix)
+
+    matrix2 = matrix_np.transpose()
+    l= []
+
+    for i in range(0,14) : 
+        #print(i, i*3,i+1,(i+1)*3)
+        #print(len(matrix_np[i*3,(i+1)*3]))
+        l.append(matrix2[i*3:((i+1)*3)])
+    
+    #print(l)
+    
+    mbressup= l[0:8]
+    mbresinf= l[9::]   
+    return (l, mbressup,mbresinf)
+
+l=splitmatrix("groupe3_003_2023_11_23_Marker.txt")[0]
+
+M5=l[3]
+x5=M5[0]
+y5=M5[1]
+z5=M5[2]
+plt.plot(x5, label = 'Marqueur 5, poignée gauche ')
+
+M14= l[11]
+x14 = M14[0]
+Y14 = M14[1]
+Z14 = M14[2]
+plt.plot(x14, label = 'Marqueur 14, genoux gauche')
+
+plt.axhspan(620, 1100, color='yellow', alpha=0.3, label='mouvement à droite ')
+plt.axhspan(0, 619 , color='green', alpha=0.3, label='mouvement à gauche')
+# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
+
+plt.title ('Pour lancer court, côté gauche')
+plt.legend()
+plt.show()
+
+l=splitmatrix("groupe3_003_2023_11_23_Marker.txt")[0]
+
+M7=l[5]
+x7=M7[0]
+y7=M7[1]
+z7=M7[2]
+plt.plot(x7, label = 'Marqueur 7, poignée droit')
+
+M18= l[13]
+x18 = M18[0]
+Y18 = M18[1]
+Z18 = M18[2]
+plt.plot(x18, label = 'Marqueur 18, genoux droit')
+
+plt.axhspan(320, 1100, color='yellow', alpha=0.3, label='mouvement à droite ')
+plt.axhspan(0, 319 , color='green', alpha=0.3, label='mouvement à gauche')
+# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
+
+plt.title ('Pour lancer court, côté droit')
+plt.legend()
+plt.show()
+
+l=splitmatrix("groupe3_004_2023_11_23_Marker.txt")[0]
+
+M5=l[3]
+x5=M5[0]
+y5=M5[1]
+z5=M5[2]
+plt.plot(x5, label = 'Marqueur 5, poignée gauche ')
+
+M14= l[11]
+x14 = M14[0]
+Y14 = M14[1]
+Z14 = M14[2]
+plt.plot(x14, label = 'Marqueur 14, genoux gauche')
+
+plt.axhspan(620, 1600, color='yellow', alpha=0.3, label='mouvement à droite ')
+plt.axhspan(-1600, 619 , color='green', alpha=0.3, label='mouvement à gauche')
+# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
+
+plt.title ('Pour lancer long, côté gauche')
+plt.legend()
+plt.show()
+
+l=splitmatrix("groupe3_004_2023_11_23_Marker.txt")[0]
+
+M7=l[5]
+x7=M7[0]
+y7=M7[1]
+z7=M7[2]
+plt.plot(x7, label = 'Marqueur 7, poignée droit')
+
+M18= l[13]
+x18 = M18[0]
+Y18 = M18[1]
+Z18 = M18[2]
+plt.plot(x18, label = 'Marqueur 18, genoux droit')
+
+plt.axhspan(320, 1600, color='yellow', alpha=0.3, label='mouvement à droite ')
+plt.axhspan(-1500, 319 , color='green', alpha=0.3, label='mouvement à gauche')
+# j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa 
+
+plt.title ('Pour lancer long, côté droit')
+plt.legend()
+plt.show()
