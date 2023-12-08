@@ -1,0 +1,109 @@
+!pip install ffmpeg
+!pip install --upgrade matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.animation import FuncAnimation, FFMpegWriter
+
+# Fonction d'initialisation pour l'animation
+def init():
+    return []
+
+# Fonction de mise à jour de l'animation
+def update(frame):
+    #ax.cla()  # Effacer l'axe à chaque mise à jour
+    ax.clear()  #je voulais effacer les point à cahque update mai j'y arrive pas et là c'est long
+    ax.set_xlabel('Axe X')
+    ax.set_ylabel('Axe Y')
+    ax.set_zlabel('Axe Z')
+    ax.set_title('Graphique 3D Dynamique')
+    #ax.legend() #Idealement il faudrait mettre une légende avec un couleur = un marqueur
+
+    for i in range(num_markers):
+        x = marker_columns[i][:, 0]
+        y = marker_columns[i][:, 1]
+        z = marker_columns[i][:, 2]
+        ax.scatter(x[:frame], y[:frame], z[:frame])
+
+filename = "groupe3_002_2023_11_23_Marker.txt"
+with open(filename, 'r') as file:
+    data = file.read()
+
+# Séparation des valeurs en lignes et colonnes
+lines = data.strip().split('\n')
+matrix = [list(map(float, line.split())) for line in lines]
+
+# Convertir en matrice numpy
+matrix_np = np.array(matrix)
+
+# Diviser la matrice en colonnes pour chaque marqueur (coordonnées x, y, z)
+num_columns = matrix_np.shape[1]
+num_markers = num_columns // 3
+marker_columns = np.split(matrix_np, num_markers, axis=1)
+
+# Initialiser la figure 3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Fonction d'initialisation pour l'animation
+def init():
+    return []
+
+# Fonction de mise à jour de l'animation
+def update(frame):
+    #ax.cla()  # Effacer l'axe à chaque mise à jour
+    ax.clear()  #je voulais effacer les point à cahque update mai j'y arrive pas et là c'est long
+    ax.set_xlabel('Axe X')
+    ax.set_ylabel('Axe Y')
+    ax.set_zlabel('Axe Z')
+    ax.set_title('Graphique 3D Dynamique')
+    #ax.legend() #Idealement il faudrait mettre une légende avec un couleur = un marqueur
+
+    for i in range(num_markers):
+        x = marker_columns[i][:, 0]
+        y = marker_columns[i][:, 1]
+        z = marker_columns[i][:, 2]
+        ax.scatter(x[:frame], y[:frame], z[:frame])
+        
+    
+
+# Créer l'animation
+total_frames = len(marker_columns[0])
+animation = FuncAnimation(fig, update, init_func=init, frames=total_frames, interval=10)
+
+# Enregistrer l'animation en  MP4
+writer = FFMpegWriter(fps=30)
+animation.save('animation_3D_court.mp4', writer='ffmpeg', fps=30)
+
+#plt.show()
+
+
+
+filename = "groupe3_003_2023_11_23_Marker.txt"
+with open(filename, 'r') as file:
+    data2 = file.read()
+
+# Séparation des valeurs en lignes et colonnes
+lines2 = data2.strip().split('\n')
+matrix2 = [list(map(float, line.split())) for line in lines2]
+
+# Convertir en matrice numpy
+matrix2_np = np.array(matrix2)
+
+# Diviser la matrice en colonnes pour chaque marqueur (coordonnées x, y, z)
+num_columns2 = matrix2_np.shape[1]
+num_markers2 = num_columns2 // 3
+marker_columns2 = np.split(matrix2_np, num_markers2, axis=1)
+
+# Initialiser la figure 3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Créer l'animation
+total_frames2 = len(marker_columns2[0])
+animation2 = FuncAnimation(fig, update, init_func=init, frames=total_frames2, interval=10)
+
+# Enregistrer l'animation en tant que fichier MP4
+writer = FFMpegWriter(fps=30)
+animation2.save('animation_3D_court_2.mp4', writer='ffmpeg', fps=30)
+
