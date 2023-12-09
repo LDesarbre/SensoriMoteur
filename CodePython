@@ -80,6 +80,7 @@ minima_M7= -extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320
 minima_M18 = -extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320)[2]
 average_difference_between_minimaM7M18=-extract_local_maxima_time_differences(-x7, -x18, thresholdchoice=320)[3]
 
+temps = [i*10 for i in range(0,len(x18))]
 
 print ("Moyenne des différences entre les minimum :", average_difference_between_minimaM7M18)
 print ("Moyenne des différences entre les extréma :",average_differencepeaksM7M18)
@@ -88,18 +89,18 @@ plt.axhspan(320, 1600, color='yellow', alpha=0.3) #, label='mouvement à droite 
 plt.axhspan(-1500, 319 , color='green', alpha=0.3) #, label='mouvement à gauche'
 # j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa
 
-plt.plot(x7, label = 'Marqueur 7, poignée droit', color='blue')
-plt.plot(x18, label = 'Marqueur 18, genoux droit', color='orange')
-plt.scatter(all_peaks_indices, peaks_M18, color='orange')#, label='Pics M18, à droite'
-plt.scatter(all_peaks_indices, peaks_M7, color='blue') #, label='Pics M7, à droite'
-plt.scatter(all_minima_indices, minima_M18, color='orange', marker ="v") #label='Pics M18, à gauche',
-plt.scatter(all_minima_indices, minima_M7, color='blue', marker ="v") #label='Pics M7, à gauche'
-plt.axhline(y=-320, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à gauche')
-plt.axhline(y=1000, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à droite')
+plt.plot(temps, x7, label = 'Marqueur 7, poignée droit', color='blue')
+plt.plot(temps, x18, label = 'Marqueur 18, genou droit', color='orange')
+plt.scatter(all_peaks_indices*10, peaks_M18, color='orange')#, label='Pics M18, à droite'
+plt.scatter(all_peaks_indices*10, peaks_M7, color='blue') #, label='Pics M7, à droite'
+plt.scatter(all_minima_indices*10, minima_M18, color='orange', marker ="v") #label='Pics M18, à gauche',
+plt.scatter(all_minima_indices*10, minima_M7, color='blue', marker ="v") #label='Pics M7, à gauche'
+plt.axhline(y=-320, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold')
+plt.axhline(y=1000, xmin=0.1, xmax=0.9, color='grey', linestyle='--')
 
 
-plt.title ('Lancer long, marqueur côté droit')
-plt.xlabel('Temps')
+plt.title ('Lancers longs, marqueurs côté droit')
+plt.xlabel('Temps (ms)')
 plt.ylabel('x')
 plt.legend()
 plt.show()
@@ -115,6 +116,7 @@ x7=M7[0]
 M18= l[13]
 x18 = M18[0]
 
+temps = [i*10 for i in range(0,len(x7))]
 
 all_peaks_indices, peaks_M7, peaks_M18, average_differencepeaksM7M18 =extract_local_maxima_time_differences(x7, x18, 500)
 
@@ -131,18 +133,18 @@ plt.axhspan(320, 1000, color='yellow', alpha=0.3) #, label='mouvement à droite 
 plt.axhspan(-500, 319 , color='green', alpha=0.3) #, label='mouvement à gauche'
 # j'ai pas éverifié si c'était bien en haut = moivement à droite et vice versa
 
-plt.plot(x7, label = 'Marqueur 7, poignée droit', color='blue')
-plt.plot(x18, label = 'Marqueur 18, genoux droit', color='orange')
-plt.scatter(all_peaks_indices, peaks_M18, color='orange')#, label='Pics M18, à droite'
-plt.scatter(all_peaks_indices, peaks_M7, color='blue') #, label='Pics M7, à droite'
-plt.scatter(all_minima_indices, minima_M18, color='orange', marker ="v") #label='Pics M18, à gauche',
-plt.scatter(all_minima_indices, minima_M7, color='blue', marker ="v") #label='Pics M7, à gauche'
-plt.axhline(y=200, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à gauche')
-plt.axhline(y=500, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold à droite')
+plt.plot(temps, x7, label = 'Marqueur 7, poignée droit', color='blue')
+plt.plot(temps, x18, label = 'Marqueur 18, genou droit', color='orange')
+plt.scatter(all_peaks_indices*10, peaks_M18, color='orange')#, label='Pics M18, à droite'
+plt.scatter(all_peaks_indices*10, peaks_M7, color='blue') #, label='Pics M7, à droite'
+plt.scatter(all_minima_indices*10, minima_M18, color='orange', marker ="v") #label='Pics M18, à gauche',
+plt.scatter(all_minima_indices*10, minima_M7, color='blue', marker ="v") #label='Pics M7, à gauche'
+plt.axhline(y=200, xmin=0.1, xmax=0.9, color='grey', linestyle='--', label='Threshold')
+plt.axhline(y=500, xmin=0.1, xmax=0.9, color='grey', linestyle='--')
 
 
-plt.title ('Lancer long, marqueur côté droit')
-plt.xlabel('Temps')
+plt.title ('Lancers courts, marqueurs côté droit')
+plt.xlabel('Temps (ms)')
 plt.ylabel('x')
 plt.legend()
 plt.show()
